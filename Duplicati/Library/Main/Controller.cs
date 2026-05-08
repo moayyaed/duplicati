@@ -559,6 +559,7 @@ namespace Duplicati.Library.Main
                     SetupCommonOptions(result, ref paths, ref filter, logTarget);
                     Logging.Log.WriteInformationMessage(LOGTAG, "StartingOperation", Strings.Controller.StartingOperationMessage(m_options.MainAction));
 
+                    using (SlowQueryMonitor.StartMonitoring(m_options.SlowQueryThreshold))
                     using (new ProcessController(m_options))
                     using (new Logging.Timer(LOGTAG, string.Format("Run{0}", result.MainOperation), string.Format("Running {0}", result.MainOperation)))
                     using (new CoCoL.IsolatedChannelScope())
