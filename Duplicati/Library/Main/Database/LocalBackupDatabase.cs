@@ -748,7 +748,7 @@ namespace Duplicati.Library.Main.Database
                 .SetTransaction(m_rtr)
                 .SetParameterValue("@Hash", key)
                 .SetParameterValue("@Size", size)
-                .ExecuteScalarInt64Async(m_logQueries, -1, token)
+                .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
         }
 
@@ -775,7 +775,7 @@ namespace Duplicati.Library.Main.Database
                                 await m_moveblockfromdeletedCommand
                                     .SetTransaction(m_rtr)
                                     .SetParameterValue("@DeletedBlockId", id)
-                                    .ExecuteNonQueryAsync(m_logQueries, token)
+                                    .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                                     .ConfigureAwait(false);
 
                                 sizes.Remove(size);
@@ -791,7 +791,7 @@ namespace Duplicati.Library.Main.Database
                             .SetTransaction(m_rtr)
                             .SetParameterValue("@Hash", key)
                             .SetParameterValue("@Size", size)
-                            .ExecuteScalarInt64Async(m_logQueries, -1, token)
+                            .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                             .ConfigureAwait(false);
 
                         if (id != -1)
@@ -799,7 +799,7 @@ namespace Duplicati.Library.Main.Database
                             var c = await m_moveblockfromdeletedCommand
                                 .SetTransaction(m_rtr)
                                 .SetParameterValue("@DeletedBlockId", id)
-                                .ExecuteNonQueryAsync(m_logQueries, token)
+                                .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                                 .ConfigureAwait(false);
 
                             if (c != 2)
@@ -816,7 +816,7 @@ namespace Duplicati.Library.Main.Database
                     .SetParameterValue("@Hash", key)
                     .SetParameterValue("@VolumeId", volumeid)
                     .SetParameterValue("@Size", size)
-                    .ExecuteNonQueryAsync(m_logQueries, token)
+                    .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                     .ConfigureAwait(false);
 
                 if (ins != 1)
@@ -848,7 +848,7 @@ namespace Duplicati.Library.Main.Database
                 .SetTransaction(m_rtr)
                 .SetParameterValue("@Fullhash", filehash)
                 .SetParameterValue("@Length", size)
-                .ExecuteScalarInt64Async(m_logQueries, -1, token)
+                .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
 
             if (blocksetid != -1)
@@ -858,7 +858,7 @@ namespace Duplicati.Library.Main.Database
                 .SetTransaction(m_rtr)
                 .SetParameterValue("@Length", size)
                 .SetParameterValue("@Fullhash", filehash)
-                .ExecuteScalarInt64Async(m_logQueries, token)
+                .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
 
             long ix = 0;
@@ -873,7 +873,7 @@ namespace Duplicati.Library.Main.Database
                     var c = await m_insertblocklistHashesCommand
                         .SetParameterValue("@Index", ix)
                         .SetParameterValue("@Hash", bh)
-                        .ExecuteNonQueryAsync(m_logQueries, token)
+                        .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                         .ConfigureAwait(false);
 
                     if (c != 1)
@@ -896,7 +896,7 @@ namespace Duplicati.Library.Main.Database
                     .SetParameterValue("@Index", ix)
                     .SetParameterValue("@Hash", h)
                     .SetParameterValue("@Size", exsize)
-                    .ExecuteNonQueryAsync(m_logQueries, token)
+                    .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                     .ConfigureAwait(false);
 
                 if (c != 1)
@@ -956,7 +956,7 @@ namespace Duplicati.Library.Main.Database
                     .SetTransaction(m_rtr)
                     .SetParameterValue("@Hash", filehash)
                     .SetParameterValue("@Size", size)
-                    .ExecuteScalarInt64Async(m_logQueries, -1, token)
+                    .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                     .ConfigureAwait(false);
 
                 return (metadataid != -1, metadataid);
@@ -986,7 +986,7 @@ namespace Duplicati.Library.Main.Database
                 .SetTransaction(m_rtr)
                 .SetParameterValue("@BlocksetId", blocksetid)
                 .SetParameterValue("@Content", m_storeMetadataContent ? Library.Utility.Utility.GetStringWithoutBOM(metahash.Blob) : null)
-                .ExecuteScalarInt64Async(m_logQueries, token)
+                .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
 
             await m_rtr.CommitAsync(token: token).ConfigureAwait(false);
@@ -1012,7 +1012,7 @@ namespace Duplicati.Library.Main.Database
                 .SetParameterValue("@MetadataId", metadataID)
                 .SetParameterValue("@Path", filename)
                 .SetParameterValue("@PrefixId", pathprefixid)
-                .ExecuteScalarInt64Async(m_logQueries, token)
+                .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
 
             if (fileidobj == -1)
@@ -1022,7 +1022,7 @@ namespace Duplicati.Library.Main.Database
                     .SetParameterValue("@Path", filename)
                     .SetParameterValue("@BlocksetId", blocksetID)
                     .SetParameterValue("@MetadataId", metadataID)
-                    .ExecuteScalarInt64Async(m_logQueries, token)
+                    .ExecuteScalarInt64PerformanceSensitiveAsync(m_logQueries, token)
                     .ConfigureAwait(false);
 
                 await m_rtr.CommitAsync(token).ConfigureAwait(false);
@@ -1069,7 +1069,7 @@ namespace Duplicati.Library.Main.Database
                 .SetParameterValue("@FilesetId", m_filesetId)
                 .SetParameterValue("@FileId", fileid)
                 .SetParameterValue("@LastModified", lastmodified.ToUniversalTime().Ticks)
-                .ExecuteNonQueryAsync(m_logQueries, token)
+                .ExecuteNonQueryPerformanceSensitiveAsync(m_logQueries, token)
                 .ConfigureAwait(false);
         }
 

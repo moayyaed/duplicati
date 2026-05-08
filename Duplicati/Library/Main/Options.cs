@@ -194,6 +194,11 @@ namespace Duplicati.Library.Main
         private static readonly int DEFAULT_RESTORE_CHANNEL_BUFFER_SIZE = Environment.ProcessorCount;
 
         /// <summary>
+        /// The default value for the long database query threshold
+        /// </summary>
+        private const string DEFAULT_LONG_DATABASE_QUERY_THRESHOLD = "30m";
+
+        /// <summary>
         /// An enumeration that describes the supported strategies for an optimization
         /// </summary>
         public enum OptimizationStrategy
@@ -467,6 +472,7 @@ namespace Duplicati.Library.Main
             new CommandLineArgument("log-socket-data", CommandLineArgument.ArgumentType.Integer, Strings.Options.LogsocketdataShort, Strings.Options.LogsocketdataLong, "-1"),
 
             new CommandLineArgument("profile-all-database-queries", CommandLineArgument.ArgumentType.Boolean, Strings.Options.ProfilealldatabasequeriesShort, Strings.Options.ProfilealldatabasequeriesLong, "false"),
+            new CommandLineArgument("long-database-query-threshold", CommandLineArgument.ArgumentType.Timespan, Strings.Options.LongdatabasequerythresholdShort, Strings.Options.LongdatabasequerythresholdLong, DEFAULT_LONG_DATABASE_QUERY_THRESHOLD),
             new CommandLineArgument("store-metadata-content-in-database", CommandLineArgument.ArgumentType.Boolean, Strings.Options.StoremetadatacontentindatabaseShort, Strings.Options.StoremetadatacontentindatabaseLong, "false"),
 
             new CommandLineArgument("list-verify-uploads", CommandLineArgument.ArgumentType.Boolean, Strings.Options.ListverifyuploadsShort, Strings.Options.ListverifyuploadsLong, "false"),
@@ -1147,6 +1153,11 @@ namespace Duplicati.Library.Main
         /// A value indicating if all database queries should be logged
         /// </summary>
         public bool ProfileAllDatabaseQueries => GetBool("profile-all-database-queries");
+
+        /// <summary>
+        /// Gets the threshold for a database query to be considered slow
+        /// </summary>
+        public TimeSpan SlowQueryThreshold => Library.Utility.Utility.ParseTimespanOption(m_options, "long-database-query-threshold", DEFAULT_LONG_DATABASE_QUERY_THRESHOLD);
 
         /// <summary>
         /// A value indicating if metadata content should be stored in the database
