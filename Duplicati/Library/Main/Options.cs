@@ -391,6 +391,14 @@ namespace Duplicati.Library.Main
             }
         }
 
+        private IEnumerable<ICommandLineArgument> GetDebugConditionalCommands()
+        {
+#if DEBUG
+            yield return new CommandLineArgument("unittest-mode", CommandLineArgument.ArgumentType.Boolean, Strings.Options.UnittestmodeShort, Strings.Options.UnittestmodeLong, "false");
+#endif
+            yield break;
+        }
+
         /// <summary>
         /// Gets all supported commands
         /// </summary>
@@ -398,7 +406,6 @@ namespace Duplicati.Library.Main
         [
             new CommandLineArgument("dblock-size", CommandLineArgument.ArgumentType.Size, Strings.Options.DblocksizeShort, Strings.Options.DblocksizeLong, DEFAULT_VOLUME_SIZE, ["remote-volume-size"]),
             new CommandLineArgument("auto-cleanup", CommandLineArgument.ArgumentType.Boolean, Strings.Options.AutocleanupShort, Strings.Options.AutocleanupLong, "false"),
-            new CommandLineArgument("unittest-mode", CommandLineArgument.ArgumentType.Boolean, Strings.Options.UnittestmodeShort, Strings.Options.UnittestmodeLong, "false"),
 
             new CommandLineArgument("control-files", CommandLineArgument.ArgumentType.Path, Strings.Options.ControlfilesShort, Strings.Options.ControlfilesLong),
             new CommandLineArgument("skip-file-hash-checks", CommandLineArgument.ArgumentType.Boolean, Strings.Options.SkipfilehashchecksShort, Strings.Options.SkipfilehashchecksLong, "false"),
@@ -596,7 +603,8 @@ namespace Duplicati.Library.Main
             new CommandLineArgument("internal-profiling", CommandLineArgument.ArgumentType.Boolean, Strings.Options.InternalProfilingShort, Strings.Options.InternalProfilingLong, "false"),
             new CommandLineArgument("ignore-update-if-version-exists", CommandLineArgument.ArgumentType.Boolean, Strings.Options.IgnoreUpdateIfVersionExistsShort, Strings.Options.IgnoreUpdateIfVersionExistsLong, "false"),
 
-            .. GetOSConditionalCommands()
+            .. GetOSConditionalCommands(),
+            .. GetDebugConditionalCommands(),
         ];
 
         /// <summary>
