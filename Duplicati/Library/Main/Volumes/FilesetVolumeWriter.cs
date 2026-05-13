@@ -55,6 +55,8 @@ namespace Duplicati.Library.Main.Volumes
 
         private void WriteMetaProperties(string metahash, long metasize, string metablockhash, IEnumerable<string> metablocklisthashes)
         {
+            if (string.IsNullOrWhiteSpace(metahash))
+                throw new ArgumentNullException(nameof(metahash));
             m_writer.WritePropertyName("metahash");
             m_writer.WriteValue(metahash);
             m_writer.WritePropertyName("metasize");
@@ -109,8 +111,7 @@ namespace Duplicati.Library.Main.Volumes
             m_writer.WriteValue(size);
             m_writer.WritePropertyName("time");
             m_writer.WriteValue(Library.Utility.Utility.SerializeDateTime(lastmodified));
-            if (metahash != null)
-                WriteMetaProperties(metahash, metasize, metablockhash, metablocklisthashes);
+            WriteMetaProperties(metahash, metasize, metablockhash, metablocklisthashes);
 
             if (blocklisthashes != null)
             {
@@ -152,8 +153,7 @@ namespace Duplicati.Library.Main.Volumes
             m_writer.WriteValue(type.ToString());
             m_writer.WritePropertyName("path");
             m_writer.WriteValue(name);
-            if (metahash != null)
-                WriteMetaProperties(metahash, metasize, metablockhash, metablocklisthashes);
+            WriteMetaProperties(metahash, metasize, metablockhash, metablocklisthashes);
 
             m_writer.WriteEndObject();
         }
